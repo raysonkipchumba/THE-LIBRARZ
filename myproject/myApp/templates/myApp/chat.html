@@ -1,0 +1,66 @@
+{% extends 'myApp/base.html' %}
+
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+<h2 class="section-title">Messages</h2>
+
+<div class="row" style="align-items: flex-start;">
+    <div class="card" style="flex: 0 0 280px; min-height: 420px;">
+        <h3>People</h3>
+        <ul>
+            {% for user in users %}
+                <li>
+                    <a href="{% url 'chat_with' user.pk %}">
+                        <strong>{{ user.username }}</strong>
+                        {% if user.profile.is_online %}
+                            <span class="badge" style="background: #dff7ed; color: #1a7d5d;">Active</span>
+                        {% else %}
+                            <span class="badge" style="background: #eef3f8; color: #51677c;">Away</span>
+                        {% endif %}
+                    </a>
+                </li>
+            {% empty %}
+                <li>No other users yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card" style="flex: 1; min-height: 420px;">
+        {% if selected_user %}
+            <h3>
+                Chat with {{ selected_user.username }}
+                {% if selected_user.profile.is_online %}
+                    <span class="badge" style="background: #dff7ed; color: #1a7d5d;">Active now</span>
+                {% else %}
+                    <span class="badge" style="background: #eef3f8; color: #51677c;">Offline</span>
+                {% endif %}
+            </h3>
+
+            <div style="background: #f8fafc; border: 1px solid #dfe7ef; border-radius: 12px; padding: 16px; margin: 16px 0; max-height: 320px; overflow-y: auto;">
+                {% for message in messages %}
+                    <div style="margin-bottom: 12px;">
+                        <div style="font-size: 0.8rem; color: #5f7384; margin-bottom: 4px;">
+                            {% if message.sender == request.user %}You{% else %}{{ message.sender.username }}{% endif %}
+                            • {{ message.created_at|date:'M d, Y H:i' }}
+                        </div>
+                        <div style="background: {% if message.sender == request.user %}#dfeafc{% else %}#ffffff{% endif %}; border: 1px solid #dfe7ef; border-radius: 10px; padding: 10px 12px; display: inline-block; max-width: 80%;">
+                            {{ message.content }}
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="muted">No messages yet. Start the conversation.</p>
+                {% endfor %}
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                {{ form.content }}
+                <button type="submit" class="btn">Send message</button>
+            </form>
+        {% else %}
+            <p class="muted">Choose a user to start chatting.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

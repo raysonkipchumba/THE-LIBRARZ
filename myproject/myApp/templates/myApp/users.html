@@ -1,0 +1,39 @@
+{% extends 'myApp/base.html' %}
+
+{% block title %}Registered users{% endblock %}
+
+{% block content %}
+<h2 class="section-title">Registered users</h2>
+
+<div class="stats">
+    <div class="stat">
+        <div class="label">Total users</div>
+        <div class="value">{{ user_count }}</div>
+    </div>
+    <div class="stat">
+        <div class="label">Students</div>
+        <div class="value">{{ role_counts.student }}</div>
+    </div>
+    <div class="stat">
+        <div class="label">Professors</div>
+        <div class="value">{{ role_counts.professor }}</div>
+    </div>
+    <div class="stat">
+        <div class="label">Labs</div>
+        <div class="value">{{ role_counts.lab }}</div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>User list</h3>
+    <ul>
+        {% for user in users %}
+            <li>
+                <strong>{{ user.username }}</strong> • {{ user.email }} • <span class="badge">{{ user.profile.role|title }}</span>
+            </li>
+        {% empty %}
+            <li>No users registered yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

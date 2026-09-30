@@ -1,0 +1,53 @@
+{% extends 'myApp/base.html' %}
+
+{% block title %}{{ paper.title }}{% endblock %}
+
+{% block content %}
+<h2 class="section-title">{{ paper.title }}</h2>
+<p class="muted">{{ paper.authors }} · {{ paper.publication_year }}</p>
+<span class="badge">{{ paper.project.title }}</span>
+
+<div class="grid">
+    <div class="card">
+        <h3>Abstract</h3>
+        <p>{{ paper.abstract }}</p>
+        <p><strong>Keywords:</strong> {{ paper.keywords }}</p>
+        {% if paper.file %}
+            <a class="btn" href="{{ paper.file.url }}" target="_blank">Open file</a>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h3>Summary</h3>
+        <p>{{ paper.summary|default:'No summary added yet.' }}</p>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 24px;">
+    <h3>Notes</h3>
+    <ul>
+        {% for note in notes %}
+            <li>
+                <strong>{{ note.title }}</strong>
+                <p>{{ note.content }}</p>
+            </li>
+        {% empty %}
+            <li>No notes for this paper yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="form-wrap" style="margin-top: 24px;">
+    <h3>Add note</h3>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn">Save note</button>
+    </form>
+</div>
+{% endblock %}

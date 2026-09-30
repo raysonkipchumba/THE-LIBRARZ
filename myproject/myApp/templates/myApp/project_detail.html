@@ -1,0 +1,22 @@
+{% extends 'myApp/base.html' %}
+
+{% block title %}{{ project.title }}{% endblock %}
+
+{% block content %}
+<h2 class="section-title">{{ project.title }}</h2>
+<span class="badge">{{ project.status }}</span>
+<p class="muted">{{ project.description }}</p>
+
+<div class="grid">
+    <div class="card">
+        <h3>Related papers</h3>
+        <ul>
+            {% for paper in project.papers.all %}
+                <li><a href="{% url 'paper_detail' paper.pk %}">{{ paper.title }}</a></li>
+            {% empty %}
+                <li>No papers linked to this project yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

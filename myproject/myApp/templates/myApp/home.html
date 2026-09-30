@@ -1,0 +1,75 @@
+{% extends 'myApp/base.html' %}
+
+{% block title %}ResearchHub | Dashboard{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Research tools for professors, students, and labs.</h1>
+    <p>Organize projects, store papers, capture notes, and manage your research workflow in one place.</p>
+    {% if user.is_authenticated %}
+        <p style="margin-top: 14px;">
+            <strong>Logged in as:</strong> {{ user.username }} | <span class="badge">{{ user_role|title }}</span>
+        </p>
+        <p style="margin-top: 12px;">
+            <strong>Registered users:</strong> {{ registered_users }}
+        </p>
+    {% else %}
+        <p style="margin-top: 14px;">
+            <a href="{% url 'login' %}" class="btn secondary">Login</a>
+            <a href="{% url 'signup' %}" class="btn">Create account</a>
+        </p>
+    {% endif %}
+</div>
+
+<div class="stats">
+    <div class="stat">
+        <div class="label">Projects</div>
+        <div class="value">{{ project_count }}</div>
+    </div>
+    <div class="stat">
+        <div class="label">Papers</div>
+        <div class="value">{{ paper_count }}</div>
+    </div>
+    <div class="stat">
+        <div class="label">Notes</div>
+        <div class="value">{{ note_count }}</div>
+    </div>
+</div>
+
+<div class="grid">
+    <div class="card">
+        <h3>Recent projects</h3>
+        <ul>
+            {% for project in projects %}
+                <li><a href="{% url 'project_detail' project.pk %}">{{ project.title }}</a></li>
+            {% empty %}
+                <li class="muted">No projects yet.</li>
+            {% endfor %}
+        </ul>
+        <a class="btn" href="{% url 'project_create' %}">Create project</a>
+    </div>
+
+    <div class="card">
+        <h3>Recent papers</h3>
+        <ul>
+            {% for paper in papers %}
+                <li><a href="{% url 'paper_detail' paper.pk %}">{{ paper.title }}</a></li>
+            {% empty %}
+                <li class="muted">No papers uploaded.</li>
+            {% endfor %}
+        </ul>
+        <a class="btn secondary" href="{% url 'paper_create' %}">Upload paper</a>
+    </div>
+
+    <div class="card">
+        <h3>Recent notes</h3>
+        <ul>
+            {% for note in notes %}
+                <li><a href="{% url 'paper_detail' note.paper.pk %}">{{ note.title }}</a></li>
+            {% empty %}
+                <li class="muted">No notes saved.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

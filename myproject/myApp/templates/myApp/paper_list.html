@@ -1,0 +1,32 @@
+{% extends 'myApp/base.html' %}
+
+{% block title %}Paper Library{% endblock %}
+
+{% block content %}
+<h2 class="section-title">Research Library</h2>
+
+<form method="get" action="{% url 'paper_list' %}" style="margin-bottom: 20px;">
+    <div class="row">
+        <input class="form-control" type="text" name="q" value="{{ query }}" placeholder="Search title, author, keyword, or abstract">
+        <button type="submit" class="btn">Search</button>
+    </div>
+</form>
+
+<a class="btn secondary" href="{% url 'paper_create' %}">+ Upload Paper</a>
+
+<div class="grid">
+    {% for paper in papers %}
+        <div class="card">
+            <span class="badge">{{ paper.project.title }}</span>
+            <h3><a href="{% url 'paper_detail' paper.pk %}">{{ paper.title }}</a></h3>
+            <p class="muted">{{ paper.authors }}</p>
+            <p>{{ paper.abstract|truncatewords:30 }}</p>
+            <p><strong>Keywords:</strong> {{ paper.keywords }}</p>
+        </div>
+    {% empty %}
+        <div class="card">
+            <p>No papers found.</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

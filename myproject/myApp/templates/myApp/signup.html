@@ -1,0 +1,25 @@
+{% extends 'myApp/base.html' %}
+
+{% block title %}Create account{% endblock %}
+
+{% block content %}
+<h2 class="section-title">Create account</h2>
+<div class="form-wrap">
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="muted">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn">Create account</button>
+        <p style="margin-top: 12px;">
+            Already have an account? <a href="{% url 'login' %}">Login</a>
+        </p>
+    </form>
+</div>
+{% endblock %}
